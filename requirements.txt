@@ -1,0 +1,9 @@
+dlib
+keras
+keras_applications
+numpy
+matplotlib
+pillow
+tensorflow
+keras-preprocessing
+scipy
