@@ -1,9 +1,7 @@
 # Imports
-import sys
-print(sys.executable)
 import matplotlib.pyplot as plt
-import tensorflow as tf
 import pickle
+import tensorflow as tf
 from keras import regularizers
 from tensorflow.python.keras.layers import Dense, Flatten, Dropout
 from keras.models import Sequential
@@ -12,13 +10,11 @@ from datetime import datetime
 
 # -------------------------------------------------------------------------------------------------------------------
 
-# Code
-
 # Preparing Data
-num_classes = 93
+num_classes = 93              # Value is the number of folders in the dataset folder
 
 img_height, img_width = 64, 64
-batch_size = 64
+batch_size = 64                     # Number of samples processed before the model is updated
 
 # Loading data from directories
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
@@ -50,8 +46,6 @@ test_ds = tf.keras.preprocessing.image_dataset_from_directory(
   image_size = (img_height, img_width),
   batch_size = batch_size,
 )
-
-class_names = train_ds.class_names
 
 # Printing names of folders (student IDs) in dataset
 class_names=train_ds.class_names
