@@ -1,15 +1,14 @@
 # Imports
 import os
-from PIL import Image
-import numpy as np
+import cv2
 from datetime import datetime
 
 # Functions
 
-# Invert colors of images function
-def invert_colors(directory):
+# Conversion and inversion of images function
+def convert_invert(directory):
     start = datetime.now()
-    print("Attempting to invert color of images...")
+    print("Commencing conversion and inversion of images...")
 
     folders = os.listdir(directory)
 
@@ -28,30 +27,27 @@ def invert_colors(directory):
 
                 # Check if the file is an image file
                 if image_path.lower().endswith((".jpg", ".jpeg", ".png")):
-                  # Open the image
-                  img = Image.open(image_path)
+                  # Read the image using OpenCV
+                  img = cv2.imread(image_path)
 
-                  # Convert the image to a NumPy array
-                  img_array = np.array(img)
+                  # Convert the image to grayscale
+                  grayscale_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-                  # Invert the colors (black to white, white to black)
-                  inverted_img_array = np.invert(img_array)
+                  # Invert the colors of the image (reverse intensity values)
+                  inverted_grayscale_img = cv2.bitwise_not(grayscale_img)
 
-                  # Convert the NumPy array back to an image
-                  inverted_img = Image.fromarray(inverted_img_array)
-
-                  # Save the inverted image
-                  inverted_img.save(image_path)
+                  # Overwrite the original image with the converted and inverted image
+                  cv2.imwrite(image_path, inverted_grayscale_img)
 
   
     duration = datetime.now() - start
-    print("Time taken to invert images: ", duration)
+    print("Time taken for conversion and inversion of images: ", duration)
 
 
-# Code
+# Main
     
 # Set the directory path containing the images
-directory = "C:/Users/layto/Desktop/handwritten_to_digital_text/ascii_dataset"
+directory = "ascii_dataset"
 
 # Function calls
-invert_colors(directory)
+convert_invert(directory)

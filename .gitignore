@@ -125,6 +125,7 @@ Tasks.txt
 
 # Datasets
 ascii_dataset
+test_imgs
 
 # Environments
 htod_venv
