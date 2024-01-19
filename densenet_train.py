@@ -125,7 +125,7 @@ plt.title('Model accuracy')
 plt.ylabel('Accuracy')
 plt.xlabel('Epoch')
 plt.legend(['Train', 'Val'], loc='upper left')
-plt.savefig('VGG19_model_accuracy.png')
+plt.savefig('DenseNet_model_accuracy.png')
 plt.show()
 
 fig2 = plt.gcf()
@@ -137,7 +137,7 @@ plt.title('Model loss')
 plt.ylabel('Loss')
 plt.xlabel('Epoch')
 plt.legend(['Train', 'Val'], loc='upper right')
-plt.savefig('VGG19_model_loss.png')
+plt.savefig('DenseNet_model_loss.png')
 plt.show()
 
 # Testing model
