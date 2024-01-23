@@ -8,15 +8,15 @@ from datetime import datetime
 # Functions
 
 # Invert colors of images function
-def invert_colors(directory):
+def invert_colors(dataset_directory):
     start = datetime.now()
     print("Inverting colors of images...")
 
-    folders = os.listdir(directory)
+    folders = os.listdir(dataset_directory)
 
     # Loop through each folder in the directory
     for folder in folders:
-        folder_path = os.path.join(directory, folder)
+        folder_path = os.path.join(dataset_directory, folder)
 
         # Check if it's a directory
         if os.path.isdir(folder_path):
@@ -43,12 +43,12 @@ def invert_colors(directory):
 
 
 # Get image shape of images function
-def print_image_shape(directory):
-    folders = os.listdir(directory)
+def print_image_shape(dataset_directory):
+    folders = os.listdir(dataset_directory)
 
     # Loop through each folder in the directory
     for folder in folders:
-        folder_path = os.path.join(directory, folder)
+        folder_path = os.path.join(dataset_directory, folder)
 
         # Check if it's a directory
         if os.path.isdir(folder_path):
@@ -69,11 +69,40 @@ def print_image_shape(directory):
                   return
 
 
+# Convert images to grayscale function
+def convert_to_grayscale(test_imgs_directory):
+    start = datetime.now()
+    print("Converting images to grayscale...")
+
+    files = os.listdir(test_imgs_directory)
+    
+    # Loop through each file in the folder
+    for file in files:
+        # Store the test image path
+        test_img_path = os.path.join(test_imgs_directory, file)
+
+        if test_img_path.lower().endswith((".jpg", ".jpeg", ".png")):
+            # Read the image using OpenCV
+            test_img = cv2.imread(test_img_path)
+
+            # Convert the image to grayscale
+            grayscale_test_img = cv2.cvtColor(test_img, cv2.COLOR_BGR2GRAY)
+            cv2.imwrite(test_img_path, grayscale_test_img)
+        else:
+            print("Invalid image format provided. Ensure the directory contains images of type (.jpg, .jpeg, .png).")
+    
+    duration = datetime.now() - start
+    print("Time taken for converting images to grayscale: ", duration)
+    
+# -------------------------------------------------------------------------------------------------------------------
+
 # Main
     
-# Set the directory path containing the images
-directory = "ascii_dataset"
+# Set the directory paths containing the images
+dataset_directory = "ascii_dataset"
+test_imgs_directory = "test_imgs"
 
 # Function calls
-invert_colors(directory)
-print_image_shape(directory)
+invert_colors(dataset_directory)
+print_image_shape(dataset_directory)
+convert_to_grayscale(test_imgs_directory)
