@@ -2,9 +2,8 @@
 import tensorflow as tf
 import pickle
 import matplotlib.pyplot as plt
-from keras.applications import DenseNet121
 from keras.models import Sequential
-from tensorflow.python.keras.layers import Flatten, Dropout, Dense
+from tensorflow.python.keras.layers import Dropout, Dense, Conv2D, MaxPooling2D, GlobalAveragePooling2D
 from keras.optimizers import RMSprop
 from keras import regularizers
 from datetime import datetime
@@ -64,27 +63,35 @@ print("Printing the contents of the pickle file: \n", data)
 # Creating model
 densenet_model = Sequential(name='DenseNet_Model')
 
-# Creating a pre-trained DenseNet model on the imagenet dataset
-pretrained_model = DenseNet121(
-    include_top=False,
-    input_shape=(img_height, img_width, 3),
-    weights='imagenet'
-)
+# First Convolutional Layer
+densenet_model.add(Conv2D(64, (7, 7), strides=(2, 2), padding='same', input_shape=(img_height, img_width, 3), activation='relu'))
+densenet_model.add(MaxPooling2D((3, 3), strides=(2, 2), padding='same'))
 
-# Freeze the weights of the pre-trained layers
-for layer in pretrained_model.layers:
-    layer.trainable = False
+# Dense Block 1
+densenet_model.add(Conv2D(128, (1, 1), padding='same', activation='relu'))
+densenet_model.add(Conv2D(32, (3, 3), padding='same', activation='relu'))
+densenet_model.add(Conv2D(32, (3, 3), padding='same', activation='relu'))
 
-# Define the DenseNet model architecture
-densenet_model.add(pretrained_model)
-densenet_model.add(Flatten())
-densenet_model.add(Dropout(0.5))
+# Transition Layer 1
+densenet_model.add(Conv2D(128, (1, 1), padding='same', activation='relu'))
+densenet_model.add(MaxPooling2D((2, 2), strides=(2, 2), padding='same'))
+
+# Add more Dense Blocks and Transition Layers as needed
+
+# Global Average Pooling
+densenet_model.add(GlobalAveragePooling2D())
+
+# Fully Connected Layer
 densenet_model.add(Dense(512, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
-# densenet_model.add(Dense(512, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
-# densenet_model.add(Dense(256, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
 densenet_model.add(Dropout(0.5))
+
+# Output Layer
 densenet_model.add(Dense(num_classes, activation='softmax', kernel_regularizer=regularizers.l2(0.01)))
-    
+
+# Explicitly build the model
+densenet_model.build(input_shape=(batch_size, img_height, img_width, 3))
+
+# Display the model summary
 densenet_model.summary()
 
 # Learning rates that are too high can cause the model to oscillate around the minimum, while rates that are too low can slow down convergence
@@ -102,7 +109,7 @@ densenet_model.compile(optimizer=RMSprop(learning_rate=0.001), loss='sparse_cate
 # Training model
 start = datetime.now()
 
-epochs = 80
+epochs = 30
 history = densenet_model.fit(
     train_ds,
     validation_data=val_ds,
