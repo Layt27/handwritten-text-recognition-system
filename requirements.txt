@@ -8,3 +8,4 @@ tensorflow
 keras-preprocessing
 scipy
 opencv-python
+easyocr
