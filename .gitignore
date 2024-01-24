@@ -123,6 +123,9 @@ celerybeat.pid
 class_names.pkl
 Tasks.txt
 
+# Models
+models
+
 # Datasets
 ascii_dataset
 test_imgs
