@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import pickle
 import tensorflow as tf
 from keras import regularizers
-from tensorflow.python.keras.layers import Dense, Flatten, Dropout
+from tensorflow.python.keras.layers import Dense, Dropout, Conv2D, MaxPooling2D, GlobalAveragePooling2D
 from keras.models import Sequential
 from keras.optimizers import RMSprop
 from datetime import datetime
@@ -61,37 +61,50 @@ with open('class_names.pkl', 'rb') as f:
 
 print("Printing the contents of the pickle file: \n", data)
 
+
 # Creating model
 vgg19_model=Sequential(name='VGG19_Model')
 
-# Creating a pre-trained VGG19 model on the imagenet dataset
-pretrained_model=tf.keras.applications.VGG19(include_top=False,
-                   input_shape=(64,64,3),
-                   pooling='avg',classes=num_classes,
-                   weights='imagenet')
-
-# Freeze the weights of the pre-trained layers
-for layer in pretrained_model.layers:
-        layer.trainable=False
-
 # Define the VGG19 model architecture
-vgg19_model.add(pretrained_model)
-vgg19_model.add(Flatten())
-vgg19_model.add(Dropout(0.5))  # Add dropout layer with a rate to prevent overfitting
- # Can add more Dense layers if adding more data to model
-vgg19_model.add(Dense(512, activation='relu', kernel_regularizer=regularizers.l2(0.01)))  # Add L2 regularization to prevent overfitting
+
+# First Convolutional Layer
+vgg19_model.add(Conv2D(64, (7, 7), strides=(2, 2), padding='same', input_shape=(img_height, img_width, 3), activation='relu'))
+vgg19_model.add(MaxPooling2D((3, 3), strides=(2, 2), padding='same'))
+
+# Dense Block 1
+vgg19_model.add(Conv2D(128, (1, 1), padding='same', activation='relu'))
+vgg19_model.add(Conv2D(32, (3, 3), padding='same', activation='relu'))
+vgg19_model.add(Conv2D(32, (3, 3), padding='same', activation='relu'))
+
+# Transition Layer 1
+vgg19_model.add(Conv2D(128, (1, 1), padding='same', activation='relu'))
+vgg19_model.add(MaxPooling2D((2, 2), strides=(2, 2), padding='same'))
+
+# Add more Dense Blocks and Transition Layers as needed
+
+# Global Average Pooling
+vgg19_model.add(GlobalAveragePooling2D())
+
+# Fully Connected Layer
+vgg19_model.add(Dense(512, activation='relu', kernel_regularizer=regularizers.l2(0.01)))
 vgg19_model.add(Dropout(0.5))
+
+# Output Layer
 vgg19_model.add(Dense(num_classes, activation='softmax', kernel_regularizer=regularizers.l2(0.01)))
 
+# Explicitly build the model
+vgg19_model.build(input_shape=(batch_size, img_height, img_width, 3))
+
+# Display the model summary
 vgg19_model.summary()
 
 # Compiling model
-vgg19_model.compile(optimizer=RMSprop(learning_rate=0.001),loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+vgg19_model.compile(optimizer=RMSprop(learning_rate=0.0001),loss='sparse_categorical_crossentropy',metrics=['accuracy'])
 
 # Training model
 start = datetime.now()
 
-epochs=40         # Number of iterations through the dataset
+epochs=140         # Number of iterations through the dataset
 history = vgg19_model.fit(
   train_ds,
   validation_data=val_ds,
