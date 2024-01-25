@@ -35,22 +35,38 @@ def text_recognition():
 
     # Initialize the EasyOCR reader
     reader = easyocr.Reader(['en'])
+    try:
+        # Use EasyOCR to perform OCR and get the coordinates of the bounding boxes
+        results = reader.readtext(img)
+        # print(results)
+    except Exception as e:
+        print(f"Error during OCR: {e}")
+        return
 
-    # Use EasyOCR to perform OCR and get bounding boxes
-    results = reader.readtext(img)
-    print(results)
 
-    # Draw bounding boxes on the image
+    # # Draw bounding boxes on the image
+    # for (bbox, text, prob) in results:
+    #     (top_left, top_right, bottom_right, bottom_left) = bbox
+    #     top_left = tuple(map(int, top_left))
+    #     bottom_right = tuple(map(int, bottom_right))
+    #     cv2.rectangle(img, top_left, bottom_right, (0, 255, 0), 2)
+
+    # # Display the image with bounding boxes
+    # plt.imshow(img)
+    # plt.title("Detected Characters")
+    # plt.show()
+
+
+    # Extract each bounding box based on the detected bounding boxes
     for (bbox, text, prob) in results:
         (top_left, top_right, bottom_right, bottom_left) = bbox
-        top_left = tuple(map(int, top_left))
-        bottom_right = tuple(map(int, bottom_right))
-        cv2.rectangle(img, top_left, bottom_right, (0, 255, 0), 2)
+        x, y, w, h = int(top_left[0]), int(top_left[1]), int(bottom_right[0] - top_left[0]), int(bottom_right[1] - top_left[1])
+        each_bbox = img[y:y + h, x:x + w]
 
-    # Display the image with bounding boxes
-    plt.imshow(img)
-    plt.title("Detected Characters")
-    plt.show()
+        # Display each bounding box
+        plt.imshow(each_bbox)
+        plt.title("Detected Characters")
+        plt.show()
 
 # -------------------------------------------------------------------------------------------------------------
 
