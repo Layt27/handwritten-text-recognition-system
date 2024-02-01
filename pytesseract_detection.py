@@ -6,6 +6,8 @@ import pytesseract
 # -------------------------------------------------------------------------------------------------------------
 
 """
+Run the command `tesseract --help-oem` in the terminal for below information.
+
 OCR Engine Modes (oem)
 0   Legacy engine only.
 1   Neural nets LSTM engine only.
@@ -14,6 +16,8 @@ OCR Engine Modes (oem)
 """
 
 """
+Run the command `tesseract --help-psm` in the terminal for below information.
+
 Page Segementation Modes (psm)
 0   Orientation and script detection (OSD only).
 1   Automatic page segmentation with OSD.
