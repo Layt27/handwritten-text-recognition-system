@@ -104,7 +104,7 @@ vgg19_model.compile(optimizer=RMSprop(learning_rate=0.0001),loss='sparse_categor
 # Training model
 start = datetime.now()
 
-epochs=140         # Number of iterations through the dataset
+epochs=600         # Number of iterations through the dataset
 history = vgg19_model.fit(
   train_ds,
   validation_data=val_ds,
