@@ -129,6 +129,7 @@ models
 # Datasets
 ascii_dataset
 test_imgs
+bbox_imgs
 
 # Environments
 htod_venv
