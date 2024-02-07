@@ -94,22 +94,15 @@ densenet_model.build(input_shape=(batch_size, img_height, img_width, 3))
 # Display the model summary
 densenet_model.summary()
 
-# Learning rates that are too high can cause the model to oscillate around the minimum, while rates that are too low can slow down convergence
-# A learning rate scheduler can adjust the learning rate during training
-# lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
-#     initial_learning_rate=0.01,
-#     decay_steps=10000,
-#     decay_rate=0.9
-# )
 
 # Compiling model
-densenet_model.compile(optimizer=RMSprop(learning_rate=0.001), loss='sparse_categorical_crossentropy',
+densenet_model.compile(optimizer=RMSprop(learning_rate=0.0001), loss='sparse_categorical_crossentropy',
                        metrics=['accuracy'])
 
 # Training model
 start = datetime.now()
 
-epochs = 30
+epochs = 600
 history = densenet_model.fit(
     train_ds,
     validation_data=val_ds,
