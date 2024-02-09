@@ -130,6 +130,7 @@ models
 ascii_dataset
 test_imgs
 bbox_imgs
+char_imgs
 
 # Environments
 htod_venv
