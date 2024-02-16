@@ -6,7 +6,7 @@ import tensorflow as tf
 from keras.models import load_model
 
 # Text recognition function
-def text_rec(char_directory):
+def text_rec():
 
     # Read the contents of the pickle file
     with open('class_names.pkl', 'rb') as f:
@@ -17,8 +17,11 @@ def text_rec(char_directory):
     # Load the DenseNet model
     densenet_model = load_model("models/densenet_model")
 
-    # # Load the VGG19 model
-    # vgg19_model = load_model("models/vgg19_model")
+    # Load the VGG19 model
+    vgg19_model = load_model("models/vgg19_model")
+
+    # # Confidence threshold
+    # confidence_threshold = 0.70
 
     img_path = "char_imgs/char_181.jpg"
     img = cv2.imread(img_path)
@@ -43,23 +46,29 @@ def text_rec(char_directory):
     normalized_img = tf.cast(normalized_img, dtype=tf.float32)
 
     # Make predictions
-    predictions = densenet_model.predict(normalized_img)
+    # Use DenseNet model to make a prediction on the normalized image
+    densenet_pred = densenet_model(normalized_img)
 
-    # Get the predicted class for the character
-    predicted_class = np.argmax(predictions, axis = 1)
+    # Use VGG19 model to make a prediction on the normalized image
+    vgg19_pred = vgg19_model(normalized_img)
+
+    # Compute the average prediction of the two models
+    ensemble_preds = np.mean([densenet_pred, vgg19_pred], axis=0)
+
+    # Get the predicted classes for each image
+    pred_classes = np.argmax(ensemble_preds, axis=1)
 
     # Obtains predicted class and their respective probability
-    for i, pred_class in enumerate(predicted_class):
+    for i, pred_class in enumerate(pred_classes):
         output_class = class_names[pred_class]
-        output_prob = predictions[i][pred_class]
-
-        print(f"Character {i+1}: {output_class}, Probability: {output_prob:.2f}")
+        output_prob = ensemble_preds[i][pred_class]
+                    
+        # Print the predicted character and probability 
+        print(f"Predicted Character: {chr(int(output_class))}, Probability: {output_prob:.2f}")
 
 # -------------------------------------------------------------------------------------------------------------
 
 # Main
-    
-char_directory = "char_imgs"
         
 # Function calls
-text_rec(char_directory)
+text_rec()
