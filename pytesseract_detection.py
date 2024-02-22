@@ -1,7 +1,6 @@
 # Imports
 import cv2
 import os
-import matplotlib.pyplot as plt
 import pytesseract
 
 # -------------------------------------------------------------------------------------------------------------
@@ -38,21 +37,15 @@ Page Segementation Modes (psm)
 
 # -------------------------------------------------------------------------------------------------------------
 
-def pytess_rec(bbox_directory):
-    # # Load image using OpenCV
-    # img = cv2.imread("bbox_imgs/bbox_1.jpg")
-
-    # # Extract the image shape
-    # height, width, _ = img.shape
-
+def pytess_rec(bbox_directory, char_list):
     # Specify custom configuration for the Tesseract OCR engine
     custom_config = r"--psm 8 --oem 3"
 
     # Create a folder to save the bounding box images
     os.makedirs("char_imgs", exist_ok=True)
 
-    # Declare and initialize count variable used in naming images
-    count = 0
+    # Declare and initialize count variable used in naming images and keeping track of how many characters make up each bounding box
+    char_count = 0
 
     # Store names of files from bbox_imgs directory
     files = os.listdir(bbox_directory)
@@ -81,18 +74,10 @@ def pytess_rec(bbox_directory):
             # Extract the character region from the original image
             character_bbox = img[y1:y2, x1:x2]
 
-            count += 1
-            cv2.imwrite(f"char_imgs/char_{count}.jpg", character_bbox)
+            char_count += 1
+            cv2.imwrite(f"char_imgs/char_{char_count}.jpg", character_bbox)
 
-            # # Check if character_bbox has non-zero dimensions
-            # if character_bbox.size == 0:
-            #     print("Skipping zero-size region.")
-            #     continue
-
-            # # Display the character image with bounding box
-            # plt.imshow(character_bbox)
-            # plt.title(f"Character {count}")
-            # plt.show()
+        char_list.append(char_count)
 
 # -------------------------------------------------------------------------------------------------------------
 
@@ -100,5 +85,8 @@ def pytess_rec(bbox_directory):
 
 bbox_directory = "bbox_imgs"
 
+# Declare and initialize a list for storing the count of the last character that makes up each bounding box
+char_list = []
+
 # Function call
-pytess_rec(bbox_directory)
+pytess_rec(bbox_directory, char_list)
