@@ -121,7 +121,6 @@ celerybeat.pid
 
 # Random Files
 class_names.pkl
-Tasks.txt
 output_file.txt
 
 # Models
@@ -129,7 +128,6 @@ models
 
 # Datasets
 ascii_dataset
-test_imgs
 bbox_imgs
 char_imgs
 
