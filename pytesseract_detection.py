@@ -67,16 +67,17 @@ def pytess_rec(bbox_directory, char_list):
         # Draw bounding boxes on each character
         for box in boxes.splitlines():
             box = box.split(" ")
-            # img = cv2.rectangle(img, (int(box[1]), height - int(box[2])), (int(box[3]), height - int(box[4])), (0, 255, 0), 2)
 
             # Extract bounding box coordinates
             x1, y1, x2, y2 = int(box[1]), int(box[2]), int(box[3]), int(box[4])
             # Extract the character region from the original image
             character_bbox = img[y1:y2, x1:x2]
 
+            # Save each extracted character region as an image
             char_count += 1
             cv2.imwrite(f"char_imgs/char_{char_count}.jpg", character_bbox)
 
+        # Append the count of the last character in every bounding box to the list 
         char_list.append(char_count)
 
 # -------------------------------------------------------------------------------------------------------------

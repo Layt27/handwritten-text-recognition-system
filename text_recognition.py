@@ -7,7 +7,8 @@ import tensorflow as tf
 from keras.models import load_model
 from pytesseract_detection import char_list
 
-# Text recognition function
+# -------------------------------------------------------------------------------------------------------------
+
 def text_rec(char_directory):
 
     # Read the contents of the pickle file
@@ -24,9 +25,6 @@ def text_rec(char_directory):
 
     # Load the VGG19 model
     vgg19_model = load_model("models/vgg19_model")
-
-    # # Confidence threshold
-    # confidence_threshold = 0.70
 
     # Declare and initialize count variable used for tracking through predictions
     count = 0
@@ -102,10 +100,10 @@ def text_rec(char_directory):
 
 char_directory = "char_imgs"
         
-# Function calls
+# Function call
 text_rec(char_directory)
 
 # Open and read the output file to view contents
-f = open("output_file.txt", "r")
+out_file = open("output_file.txt", "r")
 print("Output file contents:")
-print(f.read())
+print(out_file.read())

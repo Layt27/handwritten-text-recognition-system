@@ -12,7 +12,6 @@ from datetime import datetime
 
 # Preparing Data
 num_classes = 93              # Value is the number of folders in the dataset folder
-
 img_height, img_width = 64, 64
 batch_size = 64                     # Number of samples processed before the model is updated
 
@@ -47,7 +46,7 @@ test_ds = tf.keras.preprocessing.image_dataset_from_directory(
   batch_size = batch_size,
 )
 
-# Printing names of folders (student IDs) in dataset
+# Printing names of folders (ascii value of characters) in dataset
 class_names=train_ds.class_names
 
 # Create a pickle file to write the class names into

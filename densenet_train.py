@@ -11,9 +11,9 @@ from datetime import datetime
 # -------------------------------------------------------------------------------------------------------------------
 
 # Preparing Data
-num_classes = 93
+num_classes = 93              # Value is the number of folders in the dataset folder
 img_height, img_width = 64, 64
-batch_size = 64
+batch_size = 64                     # Number of samples processed before the model is updated
 
 # Loading data from directories
 train_ds = tf.keras.preprocessing.image_dataset_from_directory(
@@ -21,7 +21,7 @@ train_ds = tf.keras.preprocessing.image_dataset_from_directory(
     validation_split=0.15,
     subset="training",
     seed=123,
-    shuffle=True,
+    shuffle=True,       # Shuffle order of data during training to prevent memorization and learn general patterns in data better
     image_size=(img_height, img_width),
     batch_size=batch_size,
 )
@@ -63,6 +63,8 @@ print("Printing the contents of the pickle file: \n", data)
 # Creating model
 densenet_model = Sequential(name='DenseNet_Model')
 
+# Define the DenseNet model architecture
+
 # First Convolutional Layer
 densenet_model.add(Conv2D(64, (7, 7), strides=(2, 2), padding='same', input_shape=(img_height, img_width, 3), activation='relu'))
 densenet_model.add(MaxPooling2D((3, 3), strides=(2, 2), padding='same'))
@@ -102,7 +104,7 @@ densenet_model.compile(optimizer=RMSprop(learning_rate=0.0001), loss='sparse_cat
 # Training model
 start = datetime.now()
 
-epochs = 600
+epochs = 600          # Number of iterations through the dataset
 history = densenet_model.fit(
     train_ds,
     validation_data=val_ds,

@@ -9,7 +9,7 @@ import easyocr
 def easy_ocr_detection():
 
     # Load image using OpenCV
-    img_path = "test_imgs/test_img_1.jpg"
+    img_path = "test_imgs/test_img_1.jpg"       # Replace with path to image you want to perform detection and recognition on
     img = cv2.imread(img_path)
 
     # Initialize the EasyOCR reader
@@ -67,5 +67,5 @@ def easy_ocr_detection():
 
 # Main
         
-# Function calls
+# Function call
 easy_ocr_detection()
